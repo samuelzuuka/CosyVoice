@@ -14,21 +14,19 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.aliyun.com@g' /etc/apt/sources.li
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 
-# 2. pip 工具链 + numpy（pyworld/openai-whisper 构建需要 numpy 先装）
+# 2. pip 工具链 + numpy + PyTorch CPU（合一层减少冗余 RUN）
 RUN python3 -m pip install --upgrade pip setuptools wheel numpy==1.26.4 \
+    -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com \
+    && pip install torch==2.3.1 torchaudio==2.3.1 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-# 3. PyTorch CPU
-RUN pip install torch==2.3.1 torchaudio==2.3.1 \
-    -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
-
-# 4. 其余依赖
+# 3. requirements.txt
 WORKDIR /workspace/CosyVoice
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-build-isolation \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-# 5. 源码
+# 4. 源码
 COPY . .
 ENV PYTHONPATH="/workspace/CosyVoice:/workspace/CosyVoice/third_party/Matcha-TTS:${PYTHONPATH}"
 
