@@ -19,17 +19,21 @@ RUN python3 -m pip install --upgrade pip setuptools wheel numpy==1.26.4 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
 # 3. PyTorch
-RUN pip install torch==2.3.1 \
+# --mount=type=cache 缓存 pip 下载包，重试不用重新下载
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install torch==2.3.1 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
 # 4. torchaudio
-RUN pip install torchaudio==2.3.1 \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install torchaudio==2.3.1 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
 # 5. requirements.txt
 WORKDIR /workspace/CosyVoice
 COPY requirements.txt .
-RUN pip install -r requirements.txt --no-build-isolation \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt --no-build-isolation \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
 # 6. 源码
