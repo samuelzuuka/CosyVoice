@@ -1,0 +1,21 @@
+services:
+  cosyvoice:
+    build: .
+    image: cosyvoice-webui:latest
+    container_name: cosyvoice
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/workspace/CosyVoice/pretrained_models
+    environment:
+      - WEBUI_PORT=8000
+      - MODEL_DIR=pretrained_models/CosyVoice-300M
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: "2gb"

@@ -1,0 +1,6 @@
+services:
+  cosyvoice:
+    deploy:
+      resources:
+        reservations:
+          devices: []
