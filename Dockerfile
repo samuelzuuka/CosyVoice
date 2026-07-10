@@ -18,17 +18,21 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.aliyun.com@g' /etc/apt/sources.li
 RUN python3 -m pip install --upgrade pip setuptools wheel numpy==1.26.4 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-# 3. PyTorch CPU
-RUN pip install torch==2.3.1 torchaudio==2.3.1 \
+# 3. PyTorch
+RUN pip install torch==2.3.1 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-# 4. requirements.txt
+# 4. torchaudio
+RUN pip install torchaudio==2.3.1 \
+    -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
+
+# 5. requirements.txt
 WORKDIR /workspace/CosyVoice
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-build-isolation \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-# 5. 源码
+# 6. 源码
 COPY . .
 ENV PYTHONPATH="/workspace/CosyVoice:/workspace/CosyVoice/third_party/Matcha-TTS:${PYTHONPATH}"
 
