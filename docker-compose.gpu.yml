@@ -2,9 +2,9 @@ services:
   cosyvoice:
     build:
       context: .
-      dockerfile: docker/Dockerfile.cpu
-    image: cosyvoice-webui:latest
-    container_name: cosyvoice
+      dockerfile: docker/Dockerfile.gpu
+    image: cosyvoice-webui:latest-gpu
+    container_name: cosyvoice-gpu
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -13,5 +13,12 @@ services:
     environment:
       - WEBUI_PORT=8000
       - MODEL_DIR=pretrained_models/CosyVoice-300M
-      - CUDA_VISIBLE_DEVICES=""
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     shm_size: "2gb"
+    runtime: nvidia
