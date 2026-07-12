@@ -1,0 +1,6 @@
+models/
+.claude/
+.git/
+__pycache__/
+*.pyc
+.env

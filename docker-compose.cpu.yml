@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/workspace/CosyVoice/pretrained_models
+      - ${COSYVOICE_MODELS_PATH:-./models}:/workspace/CosyVoice/pretrained_models
     environment:
       - WEBUI_PORT=8000
       - MODEL_DIR=pretrained_models/CosyVoice-300M
