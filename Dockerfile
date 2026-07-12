@@ -14,19 +14,6 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.aliyun.com@g' /etc/apt/sources.li
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 
-# 1.5 NVIDIA CUDA 12.1 minimal dev tools（deepspeed 需要 nvcc + 头文件，仅装必要组件）
-RUN curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb -o /tmp/cuda-keyring.deb && \
-    dpkg -i /tmp/cuda-keyring.deb && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-        cuda-nvcc-12-1 \
-        cuda-cudart-dev-12-1 \
-        cuda-nvrtc-dev-12-1 && \
-    rm -rf /var/lib/apt/lists/* /tmp/cuda-keyring.deb && \
-    ln -sf /usr/local/cuda-12.1 /usr/local/cuda
-ENV CUDA_HOME=/usr/local/cuda
-ENV PATH=/usr/local/cuda/bin:${PATH}
-
 # 2. pip 工具链 + numpy
 RUN python3 -m pip install --upgrade pip setuptools wheel numpy==1.26.4 \
     -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com

@@ -11,11 +11,5 @@ services:
     environment:
       - WEBUI_PORT=8000
       - MODEL_DIR=pretrained_models/CosyVoice-300M
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      - CUDA_VISIBLE_DEVICES=""
     shm_size: "2gb"
