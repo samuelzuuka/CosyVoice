@@ -7,11 +7,11 @@ services:
     container_name: cosyvoice
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${COSYVOICE_PORT:-8000}:8000"
     volumes:
       - ${COSYVOICE_MODELS_PATH:-./models}:/workspace/CosyVoice/pretrained_models
     environment:
-      - WEBUI_PORT=8000
+      - WEBUI_PORT=${COSYVOICE_PORT:-8000}
       - MODEL_DIR=pretrained_models/CosyVoice-300M
       - CUDA_VISIBLE_DEVICES=""
     shm_size: "2gb"
